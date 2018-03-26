@@ -654,10 +654,12 @@ void display(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	/* Background axex no need.
 	ModelMatrix = glm::mat4(1.0f);
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_axes();
+	*/
 
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 0.0f, 0.0f));
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
@@ -666,6 +668,9 @@ void display(void) {
  
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	// added code to test rotate.
+	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	//
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_shirt();
@@ -694,6 +699,8 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_car2();
 
+
+	//glutPostRedisplay();
 	glFlush();	
 }   
 
@@ -732,14 +739,17 @@ void cleanup(void) {
 
 void timer(int value)
 {
-
+	airplane_clock--;
+	car1_clock++;
+	car2_clock++;
+	house_clock++;
 
 	glutPostRedisplay();
 	glutTimerFunc(5, timer, 0);
 }
 
 void register_callbacks(void) {
-	glutTimerFunc(20, timer, 0);
+	glutTimerFunc(25, timer, 0);
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
