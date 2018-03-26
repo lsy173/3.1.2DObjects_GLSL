@@ -677,12 +677,20 @@ void display(void) {
 
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	// added code to test rotate.
+	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	//
+
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_house();
 	
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	// added code to test rotate.
+	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car1_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+	//
+
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_car();
