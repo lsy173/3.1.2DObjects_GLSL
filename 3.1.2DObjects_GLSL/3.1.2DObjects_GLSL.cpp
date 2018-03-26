@@ -23,23 +23,14 @@ int win_width = 0, win_height = 0;
 float centerx = 0.0f, centery = 0.0f, rotate_angle = 0.0f;
 
 // Suyeong added variables start here.
-float shirt_clock=0;
-float house_clock=0;
-float car1_clock=0;
-float cocktail_clock=0;
-float car2_clock=0;
-
-float shirt_size = 1;
-float house_size = 1;
-float car1_size = 1;
-float cocktail_size = 1;
-float car2_size = 1;
-
-int shirt_flag = 0;
-int house_flag = 0;
-int car1_flag = 0;
-int cocktail_flag = 0;
-int car2_flag = 0;
+float airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=0,car2_clock=0;
+// Each object's size variable.
+float airplane_size, shirt_size = 1, house_size = 1, car1_size = 1, cocktail_size = 1, car2_size = 1;
+// Each object's coordinate change flag.
+int airplane_flag=0, shirt_flag = 0, house_flag = 0, car1_flag = 0, cocktail_flag = 0, car2_flag = 0;
+// Each object's coordinate informaion variables.
+float airplane_x=0,airplane_y=0,shirt_x=0, shirt_y=0, house_x=0, house_y=0, car1_x=0, car1_y=0, cocktail_x=0, cocktail_y=0, car2_x=0, car2_y=0;
+//
 // Suyeong added variables end here.
 
 GLfloat axes[4][2];
@@ -160,7 +151,7 @@ GLfloat airplane_color[7][3] = {
 
 GLuint VBO_airplane, VAO_airplane;
 
-int airplane_clock = 0;
+//int airplane_clock = 0;
 float airplane_s_factor = 1.0f;
 
 void prepare_airplane() {
@@ -662,6 +653,9 @@ void display(void) {
 	*/
 
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 0.0f, 0.0f));
+	
+	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3( -500.0f+airplane_x,0.0f+airplane_y, 0.0f));
+
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_airplane();
