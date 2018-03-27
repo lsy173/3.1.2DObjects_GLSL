@@ -27,7 +27,7 @@ float airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=
 // Each object's size variable.
 float airplane_size, shirt_size = 1, house_size = 1, car1_size = 1, cocktail_size = 1, car2_size = 1;
 // Each object's coordinate change flag.
-int airplane_flag=0, shirt_flag = 0, house_flag = 0, car1_flag = 0, cocktail_flag = 0, car2_flag = 0;
+int airplane_flag=0, shirt_flag = 0, house_flag = 0, car1_flag = 0, cocktail_flag = 0, car2_flag = 0, car2_flag_x = 0;;
 // Each object's coordinate informaion variables.
 float airplane_x=0,airplane_y=0,shirt_x=0, shirt_y=0, house_x=0, house_y=0, car1_x=0, car1_y=0, cocktail_x=0, cocktail_y=0, car2_x=0, car2_y=0;
 //
@@ -700,12 +700,37 @@ void display(void) {
 	
 	// car2 code start here.
 
+	
+
 	if (car2_flag == 0) // move downward.
 	{
+		car2_x += 5;
 		car2_y++;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, 200.0f-car2_y, 0.0f));
-		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		if (car2_flag_x == 0)      // move leftward.
+		{
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f-car2_x, 200.0f - car2_y, 0.0f));
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		
+			if (500.0f - car2_x <= -499.0f) // touch the left end(I defined.).
+			{
+				car2_flag_x = 1;
+				car2_x = 0;
+			}
+		}
+		else  // car2_flag_x == 1   // move rigthward.
+		{
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f + car2_x, 200.0f - car2_y, 0.0f));
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+			
+			if (-500.0f + car2_x >= 499.0f)
+			{
+				car2_flag_x = 0;
+				car2_x = 0;
+			}
+		}
+
 		if (200.0f - car2_y <= -200.0f) // touch the floor.
 		{
 			car2_flag = 1;
