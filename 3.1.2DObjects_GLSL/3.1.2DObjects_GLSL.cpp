@@ -691,6 +691,9 @@ void display(void) {
 	
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	// added code to move cocktail.
+	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*cocktail_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+	//
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_cocktail();
@@ -744,6 +747,7 @@ void timer(int value)
 	airplane_clock--;
 	car1_clock++;
 	car2_clock++;
+	cocktail_clock++;
 	house_clock++;
 
 	glutPostRedisplay();
