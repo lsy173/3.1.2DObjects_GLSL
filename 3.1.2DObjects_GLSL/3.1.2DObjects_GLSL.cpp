@@ -638,7 +638,7 @@ void draw_car2() {
 	glBindVertexArray(0);
 }
 
-float count_var=0;
+float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0;
 
 void display(void) {
 	int i;
@@ -656,10 +656,10 @@ void display(void) {
 
 
 	// draw airplane start here.
-	if (airplane_flag == 0)    // airplane is on the top half of circle movement.
+	if ( airplane_flag == 0 )    // airplane is on the top half of circle movement.
 	{
-		count_var+=3; // move leftward.
-		airplane_x = -300.0f + count_var;
+		count_var_airplane+=3; // move leftward.
+		airplane_x = -300.0f + count_var_airplane;
 		airplane_y = sqrt(90000 - pow(airplane_x, 2));
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
 		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -667,13 +667,13 @@ void display(void) {
 		if ( airplane_x >= 299.0f)
 		{
 			airplane_flag = 1;
-			count_var = 0;
+			count_var_airplane = 0;
 		}
 	}
 	else // airplane_flag == 1  // airplane is on the bottom half of circle movement.
 	{
-		count_var+=3;  // move right ward.
-		airplane_x = 300.0f - count_var;
+		count_var_airplane+=3;  // move right ward.
+		airplane_x = 300.0f - count_var_airplane;
 		airplane_y = -sqrt(90000 - pow(airplane_x, 2));
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
 		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -681,7 +681,7 @@ void display(void) {
 		if ( airplane_x <= -299.0f)
 		{
 			airplane_flag = 0;
-			count_var = 0;
+			count_var_airplane = 0;
 		}
 	}
 
@@ -692,7 +692,33 @@ void display(void) {
  
 
 	// draw shirt start here.
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f));
+	
+	if ( shirt_flag == 0 )  // move x-rightward.
+	{
+		count_var_shirt += 1;
+		shirt_x = -250.0f + count_var_shirt;
+		shirt_y = pow(shirt_x, 2)/100-350;
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
+
+		if ( shirt_x >= 249.0f )
+		{
+			shirt_flag = 1;
+			count_var_shirt = 0;
+		}
+	}
+	else // shirt_flag == 1 // move x-leftward.
+	{
+		count_var_shirt += 1;
+		shirt_x = 250.0f - count_var_shirt;
+		shirt_y = pow(shirt_x, 2)/100-350;
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
+
+		if (shirt_x <= -249.0f)
+		{
+			shirt_flag = 0;
+			count_var_shirt = 0;
+		}
+	}
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 	
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
