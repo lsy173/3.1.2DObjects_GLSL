@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <math.h>
 
 #include "Shaders/LoadShaders.h"
 GLuint h_ShaderProgram; // handle to shader program
@@ -652,22 +653,49 @@ void display(void) {
 	draw_axes();
 	*/
 
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 0.0f, 0.0f));
+
+	// draw airplane start here.
 	
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3( -500.0f+airplane_x,0.0f+airplane_y, 0.0f));
+	if (airplane_flag == 0)    // airplane is on the top half of circle movement.
+	{
+		airplane_x+=5; // move leftward.
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f+airplane_x, 0.0f, 0.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		if (-500.0f + airplane_x >= 499.0f)
+		{
+			airplane_flag = 1;
+			airplane_x = 0;
+		}
+	}
+	else // airplane_flag == 1  // airplane is on the bottom half of circle movement.
+	{
+		airplane_x+=5;  // move right ward.
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f-airplane_x, 0.0f, 0.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		if (500.0f - airplane_x <= -499.0f)
+		{
+			airplane_flag = 0;
+			airplane_x = 0;
+		}
+	}
 
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_airplane();
+	// draw airplane end here.
  
+
+	// draw shirt start here.
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	// added code to test rotate.
-	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	//
+	
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_shirt();
+	// draw shirt end here.
+
 
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
@@ -699,13 +727,10 @@ void display(void) {
 	draw_cocktail();
 	
 	// car2 code start here.
-
-	
-
 	if (car2_flag == 0) // move downward.
 	{
 		car2_x += 5;
-		car2_y++;
+		car2_y += 1;
 		if (car2_flag_x == 0)      // move leftward.
 		{
 			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f-car2_x, 200.0f - car2_y, 0.0f));
@@ -749,15 +774,11 @@ void display(void) {
 			car2_y = 0;
 		}
 	}
-	// move car2 code start here.
-
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_car2();
-
 	// car2 code end here.
 
-	//glutPostRedisplay();
 	glFlush();	
 }   
 
