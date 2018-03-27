@@ -698,12 +698,39 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_cocktail();
 	
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, 0.0f, 0.0f));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	// car2 code start here.
+
+	if (car2_flag == 0) // move downward.
+	{
+		car2_y++;
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, 200.0f-car2_y, 0.0f));
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		if (200.0f - car2_y <= -200.0f) // touch the floor.
+		{
+			car2_flag = 1;
+			car2_y = 0;
+		}
+	}
+	else // car2_flag == 1    // move upward.
+	{
+		car2_y++;
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, -200.0f + car2_y, 0.0f));
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, -TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		if (-200.0f + car2_y >= 200.0f) // touch the ceilling.
+		{
+			car2_flag = 0;
+			car2_y = 0;
+		}
+	}
+	// move car2 code start here.
+
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_car2();
 
+	// car2 code end here.
 
 	//glutPostRedisplay();
 	glFlush();	
