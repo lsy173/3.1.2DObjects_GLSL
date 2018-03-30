@@ -641,13 +641,13 @@ void draw_car2() {
 float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0, count_var_house=0;
 
 void display(void) {
-	int i;
-	float x, r, s, delx, delr, dels;
+	//int i;
+	//float x, r, s, delx, delr, dels;
 	glm::mat4 ModelMatrix;
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	/* Background axex no need.
+	/* Background axes no need.
 	ModelMatrix = glm::mat4(1.0f);
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
@@ -656,9 +656,10 @@ void display(void) {
 
 
 	// draw airplane start here.
+	count_var_airplane += 3;
 	if ( airplane_flag == 0 )    // airplane is on the top half of circle movement.
 	{
-		count_var_airplane+=3; // move leftward.
+		// move leftward.
 		airplane_x = -300.0f + count_var_airplane;
 		airplane_y = sqrt(90000 - pow(airplane_x, 2));
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
@@ -672,7 +673,7 @@ void display(void) {
 	}
 	else // airplane_flag == 1  // airplane is on the bottom half of circle movement.
 	{
-		count_var_airplane+=3;  // move right ward.
+		// move right ward.
 		airplane_x = 300.0f - count_var_airplane;
 		airplane_y = -sqrt(90000 - pow(airplane_x, 2));
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
@@ -692,10 +693,9 @@ void display(void) {
  
 
 	// draw shirt start here.
-	
+	count_var_shirt += 1;
 	if ( shirt_flag == 0 )  // move x-rightward.
 	{
-		count_var_shirt += 1;
 		shirt_x = -250.0f + count_var_shirt;
 		shirt_y = pow(shirt_x, 2)/100-350;
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
@@ -708,7 +708,6 @@ void display(void) {
 	}
 	else // shirt_flag == 1 // move x-leftward.
 	{
-		count_var_shirt += 1;
 		shirt_x = 250.0f - count_var_shirt;
 		shirt_y = pow(shirt_x, 2)/100-350;
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
@@ -728,12 +727,11 @@ void display(void) {
 
 
 	// draw house start here.
-	
+	count_var_house += 0.5;
 	if ( house_flag == 0 )  // move x-rightward.
 	{
-		count_var_house += 0.5;
 		house_x = -300.0f + count_var_house;
-		house_y = 50 * sin(house_x / 90 * TO_DEGREE );
+		house_y = 50 * sin(house_x * 90 * TO_DEGREE );
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
 
 		if ( house_x >= 299.9f )
@@ -744,9 +742,8 @@ void display(void) {
 	}
 	else // house_flag == 1 // move x-leftward.
 	{
-		count_var_house += 0.5;
 		house_x = 300.0f - count_var_house;
-		house_y = 50 * sin(house_x / 90 * TO_DEGREE );
+		house_y = 50 * sin(house_x * 90 * TO_DEGREE );
 		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
 
 		if ( house_x <= -299.9f )
@@ -762,7 +759,7 @@ void display(void) {
 	draw_house();
 	// draw house end here.
 
-
+	// draw car start here.
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 	// added code to test rotate.
@@ -772,16 +769,20 @@ void display(void) {
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_car();
+	// draw car end here.
+
+	// cocktail code start here.
 	
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f));
+	
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	// added code to move cocktail.
 	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*cocktail_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-	//
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
 	draw_cocktail();
-	
+	// cocktail code end here.
+
+
 	// car2 code start here.
 	if (car2_flag == 0) // move downward.
 	{
@@ -793,7 +794,7 @@ void display(void) {
 			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
 		
-			if (500.0f - car2_x <= -499.0f) // touch the left end(I defined.).
+			if (500.0f - car2_x <= -499.9f) // touch the left end(I defined.).
 			{
 				car2_flag_x = 1;
 				car2_x = 0;
@@ -805,14 +806,14 @@ void display(void) {
 			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
 			
-			if (-500.0f + car2_x >= 499.0f)
+			if (-500.0f + car2_x >= 499.9f)
 			{
 				car2_flag_x = 0;
 				car2_x = 0;
 			}
 		}
 
-		if (200.0f - car2_y <= -200.0f) // touch the floor.
+		if (200.0f - car2_y <= -199.9f) // touch the floor.
 		{
 			car2_flag = 1;
 			car2_y = 0;
