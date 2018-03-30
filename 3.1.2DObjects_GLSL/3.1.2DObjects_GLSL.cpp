@@ -638,7 +638,7 @@ void draw_car2() {
 	glBindVertexArray(0);
 }
 
-float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0;
+float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0, count_var_house=0;
 
 void display(void) {
 	int i;
@@ -727,16 +727,42 @@ void display(void) {
 	// draw shirt end here.
 
 
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	// added code to test rotate.
-	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	//
+	// draw house start here.
+	
+	if ( house_flag == 0 )  // move x-rightward.
+	{
+		count_var_house += 0.5;
+		house_x = -300.0f + count_var_house;
+		house_y = 50 * sin(house_x / 90 * TO_DEGREE );
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
 
+		if ( house_x >= 299.9f )
+		{
+			house_flag = 1;
+			count_var_house = 0;
+		}
+	}
+	else // house_flag == 1 // move x-leftward.
+	{
+		count_var_house += 0.5;
+		house_x = 300.0f - count_var_house;
+		house_y = 50 * sin(house_x / 90 * TO_DEGREE );
+		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
+
+		if ( house_x <= -299.9f )
+		{
+			house_flag = 0;
+			count_var_house = 0;
+		}
+
+	}
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));	
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_house();
-	
+	// draw house end here.
+
+
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 	// added code to test rotate.
