@@ -24,7 +24,7 @@ int win_width = 0, win_height = 0;
 float centerx = 0.0f, centery = 0.0f, rotate_angle = 0.0f;
 
 // Suyeong added variables start here.
-float boomball_clock=0, airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=0,car2_clock=0;
+float all_clock=0, boomball_clock=0, airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=0,car2_clock=0;
 // Each object's size variable.
 float boomball_size=1, airplane_size=1, shirt_size = 1, house_size = 1, car1_size = 1, cocktail_size = 1, car2_size = 1;
 // Each object's coordinate change flag.
@@ -758,322 +758,346 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_axes();
 	*/
-
-	// draw boomball start here.
-	count_var_boomball += 5;
-	if (boomball_initialflag == 0)
+	if (all_clock < 1000)
 	{
-		boomball_x = 0.0f + count_var_boomball;
-		boomball_y = 0.0f;
-		if (boomball_x < 500.0f)
-			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
-		else
-		{
-			boomball_initialflag = 1;
-			count_var_boomball = 0;
-		}
-	}
-	// if boomball_x_flag == 0 : move left // == 1 : move right
-	// if boomball_y_flag == 0 : move up   // == 1 : move down
-	else
-	{
-		if (boomball_x_flag == 0 && boomball_y_flag == 0)
-		{
-			boomball_x = 500.0f - count_var_boomball;
-			boomball_y = 0.0f + count_var_boomball * 3 / 5;
-
-			if (boomball_x > 0.0f && boomball_y < 300.0f)
-				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
-			else
-			{
-				boomball_y_flag = 1;
-				count_var_boomball = 0;
-			}
-		}
-		else if (boomball_x_flag == 0 && boomball_y_flag == 1)
-		{
-			boomball_x = 0.0f - count_var_boomball;
-			boomball_y = 300.0f - count_var_boomball * 3 / 5;
-
-			if (boomball_x > -500.0f && boomball_y > 0.0f)
-				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
-			else
-			{
-				boomball_x_flag = 1;
-				count_var_boomball = 0;
-			}
-		}
-		else if (boomball_x_flag == 1 && boomball_y_flag == 1)
-		{
-			boomball_x = -500.0f + count_var_boomball;
-			boomball_y = 0.0f - count_var_boomball * 3 / 5;
-
-			if (boomball_x < 0.0f && boomball_y > -300.0f)
-				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
-			else
-			{
-				boomball_y_flag = 0;
-				count_var_boomball = 0;
-			}
-		}
-		else if (boomball_x_flag == 1 && boomball_y_flag == 0)
+		// draw boomball start here.
+		count_var_boomball += 5;
+		if (boomball_initialflag == 0)
 		{
 			boomball_x = 0.0f + count_var_boomball;
-			boomball_y = -300.0f + count_var_boomball * 3 / 5;
-			if (boomball_x < 500.0f && boomball_y < 0.0f)
+			boomball_y = 0.0f;
+			if (boomball_x < 500.0f)
 				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
 			else
 			{
-				boomball_x_flag = 0;
+				boomball_initialflag = 1;
 				count_var_boomball = 0;
 			}
 		}
-	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(5.0f, 5.0f, 1.0f));
-	ModelMatrix = glm::rotate(ModelMatrix, 2*TO_RADIAN*boomball_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	draw_boomball();
-	// draw boomball end here.
-
-	// draw airplane start here.
-	count_var_airplane += 3;
-	if ( airplane_flag == 0 )    // airplane is on the top half of circle movement.
-	{
-		// move leftward.
-		airplane_x = -300.0f + count_var_airplane;
-		airplane_y = sqrt(90000 - pow(airplane_x, 2));
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
-		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		if ( airplane_x >= 299.0f)
+		// if boomball_x_flag == 0 : move left // == 1 : move right
+		// if boomball_y_flag == 0 : move up   // == 1 : move down
+		else
 		{
-			airplane_flag = 1;
-			count_var_airplane = 0;
-		}
-	}
-	else // airplane_flag == 1  // airplane is on the bottom half of circle movement.
-	{
-		// move right ward.
-		airplane_x = 300.0f - count_var_airplane;
-		airplane_y = -sqrt(90000 - pow(airplane_x, 2));
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
-		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		if ( airplane_x <= -299.0f)
-		{
-			airplane_flag = 0;
-			count_var_airplane = 0;
-		}
-	}
-
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	draw_airplane();
-	// draw airplane end here.
- 
-
-	// draw shirt start here.
-	count_var_shirt += 1;
-	if ( shirt_flag == 0 )  // move x-rightward.
-	{
-		shirt_x = -250.0f + count_var_shirt;
-		shirt_y = pow(shirt_x, 2)/100-350;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
-
-		if ( shirt_x >= 249.0f )
-		{
-			shirt_flag = 1;
-			count_var_shirt = 0;
-		}
-	}
-	else // shirt_flag == 1 // move x-leftward.
-	{
-		shirt_x = 250.0f - count_var_shirt;
-		shirt_y = pow(shirt_x, 2)/100-350;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
-
-		if (shirt_x <= -249.0f)
-		{
-			shirt_flag = 0;
-			count_var_shirt = 0;
-		}
-	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	draw_shirt();
-	// draw shirt end here.
-
-
-	// draw house start here.
-	count_var_house += 0.5;
-	if ( house_flag == 0 )  // move x-rightward.
-	{
-		house_x = -300.0f + count_var_house;
-		house_y = 50 * sin(house_x * 90 * TO_DEGREE );
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
-
-		if ( house_x >= 299.9f )
-		{
-			house_flag = 1;
-			count_var_house = 0;
-		}
-	}
-	else // house_flag == 1 // move x-leftward.
-	{
-		house_x = 300.0f - count_var_house;
-		house_y = 50 * sin(house_x * 90 * TO_DEGREE );
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
-
-		if ( house_x <= -299.9f )
-		{
-			house_flag = 0;
-			count_var_house = 0;
-		}
-
-	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));	
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	draw_house();
-	// draw house end here.
-
-	// draw car start here.
-	if (car1_flag == 0) // move downward.
-	{
-		car1_x += 5;
-		car1_y += 1;
-		if (car1_flag_x == 0)      // move rightward.
-		{
-			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f + car1_x, 200.0f - car1_y, 0.0f));
-
-			if (-500.0f + car1_x >= 499.9f) // touch the left end(I defined.).
+			if (boomball_x_flag == 0 && boomball_y_flag == 0)
 			{
-				car1_flag_x = 1;
-				car1_x = 0;
+				boomball_x = 500.0f - count_var_boomball;
+				boomball_y = 0.0f + count_var_boomball * 3 / 5;
+
+				if (boomball_x > 0.0f && boomball_y < 300.0f)
+					ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+				else
+				{
+					boomball_y_flag = 1;
+					count_var_boomball = 0;
+				}
+			}
+			else if (boomball_x_flag == 0 && boomball_y_flag == 1)
+			{
+				boomball_x = 0.0f - count_var_boomball;
+				boomball_y = 300.0f - count_var_boomball * 3 / 5;
+
+				if (boomball_x > -500.0f && boomball_y > 0.0f)
+					ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+				else
+				{
+					boomball_x_flag = 1;
+					count_var_boomball = 0;
+				}
+			}
+			else if (boomball_x_flag == 1 && boomball_y_flag == 1)
+			{
+				boomball_x = -500.0f + count_var_boomball;
+				boomball_y = 0.0f - count_var_boomball * 3 / 5;
+
+				if (boomball_x < 0.0f && boomball_y > -300.0f)
+					ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+				else
+				{
+					boomball_y_flag = 0;
+					count_var_boomball = 0;
+				}
+			}
+			else if (boomball_x_flag == 1 && boomball_y_flag == 0)
+			{
+				boomball_x = 0.0f + count_var_boomball;
+				boomball_y = -300.0f + count_var_boomball * 3 / 5;
+				if (boomball_x < 500.0f && boomball_y < 0.0f)
+					ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+				else
+				{
+					boomball_x_flag = 0;
+					count_var_boomball = 0;
+				}
 			}
 		}
-		else  // car2_flag_x == 1   // move rigthward.
-		{
-			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f - car1_x, 200.0f - car1_y, 0.0f));
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(5.0f, 5.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, 2 * TO_RADIAN*boomball_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_boomball();
+		// draw boomball end here.
 
-			if (500.0f - car1_x <= -499.9f)
+		// draw airplane start here.
+		count_var_airplane += 3;
+		if (airplane_flag == 0)    // airplane is on the top half of circle movement.
+		{
+			// move leftward.
+			airplane_x = -300.0f + count_var_airplane;
+			airplane_y = sqrt(90000 - pow(airplane_x, 2));
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
+			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			if (airplane_x >= 299.0f)
 			{
-				car1_flag_x = 0;
-				car1_x = 0;
+				airplane_flag = 1;
+				count_var_airplane = 0;
+			}
+		}
+		else // airplane_flag == 1  // airplane is on the bottom half of circle movement.
+		{
+			// move right ward.
+			airplane_x = 300.0f - count_var_airplane;
+			airplane_y = -sqrt(90000 - pow(airplane_x, 2));
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(airplane_x, airplane_y, 0.0f));
+			ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*airplane_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			if (airplane_x <= -299.0f)
+			{
+				airplane_flag = 0;
+				count_var_airplane = 0;
 			}
 		}
 
-		if (200.0f - car1_y <= -199.9f) // touch the floor.
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_airplane();
+		// draw airplane end here.
+
+
+		// draw shirt start here.
+		count_var_shirt += 1;
+		if (shirt_flag == 0)  // move x-rightward.
 		{
-			car1_flag = 1;
-			car1_y = 0;
-		}
-	}
-	else // car1_flag == 1    // move upward.
-	{
-		car1_y++;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -200.0f + car1_y, 0.0f));
+			shirt_x = -250.0f + count_var_shirt;
+			shirt_y = pow(shirt_x, 2) / 100 - 350;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
 
-		if (-200.0f + car1_y >= 200.0f) // touch the ceilling.
-		{
-			car1_flag = 0;
-			car1_y = 0;
-		}
-	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car1_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
-	draw_car();
-	// draw car end here.
-
-	// draw cocktail start here.
-	count_var_cocktail += 1;
-	if (cocktail_flag == 0)
-	{
-		cocktail_x = 300.0f - count_var_cocktail;
-		cocktail_y = 0.0f;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cocktail_x, cocktail_y, 0.0f));
-
-		if (cocktail_x <= -299.9f)
-		{
-			cocktail_flag = 1;
-			count_var_cocktail = 0;
-		}
-	}
-	else // cocktail_flag == 1  
-	{
-		cocktail_x = -300.0f + count_var_cocktail;
-		cocktail_y = 0.0f;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cocktail_x, cocktail_y, 0.0f));
-
-		if (cocktail_x >= 299.9f)
-		{
-			cocktail_flag = 0;
-			count_var_cocktail = 0;
-		}
-	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*cocktail_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
-	draw_cocktail();
-	// draw cocktail  end here.
-
-
-	// draw car2 start here.
-	if (car2_flag == 0) // move downward.
-	{
-		car2_x += 5;
-		car2_y += 1;
-		if (car2_flag_x == 0)      // move leftward.
-		{
-			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f-car2_x, 200.0f - car2_y, 0.0f));
-		
-			if (500.0f - car2_x <= -499.9f) // touch the left end(I defined.).
+			if (shirt_x >= 249.0f)
 			{
-				car2_flag_x = 1;
-				car2_x = 0;
+				shirt_flag = 1;
+				count_var_shirt = 0;
 			}
 		}
-		else  // car2_flag_x == 1   // move rigthward.
+		else // shirt_flag == 1 // move x-leftward.
 		{
-			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f + car2_x, 200.0f - car2_y, 0.0f));
-			
-			if (-500.0f + car2_x >= 499.9f)
+			shirt_x = 250.0f - count_var_shirt;
+			shirt_y = pow(shirt_x, 2) / 100 - 350;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(shirt_x, shirt_y, 0.0f));
+
+			if (shirt_x <= -249.0f)
 			{
-				car2_flag_x = 0;
-				car2_x = 0;
+				shirt_flag = 0;
+				count_var_shirt = 0;
 			}
 		}
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
 
-		if (200.0f - car2_y <= -199.9f) // touch the floor.
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_shirt();
+		// draw shirt end here.
+
+
+		// draw house start here.
+		count_var_house += 0.5;
+		if (house_flag == 0)  // move x-rightward.
 		{
-			car2_flag = 1;
-			car2_y = 0;
+			house_x = -300.0f + count_var_house;
+			house_y = 50 * sin(house_x * 90 * TO_DEGREE);
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
+
+			if (house_x >= 299.9f)
+			{
+				house_flag = 1;
+				count_var_house = 0;
+			}
 		}
+		else // house_flag == 1 // move x-leftward.
+		{
+			house_x = 300.0f - count_var_house;
+			house_y = 50 * sin(house_x * 90 * TO_DEGREE);
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(house_x, house_y, 0.0f));
+
+			if (house_x <= -299.9f)
+			{
+				house_flag = 0;
+				count_var_house = 0;
+			}
+
+		}
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_house();
+		// draw house end here.
+
+		// draw car start here.
+		if (car1_flag == 0) // move downward.
+		{
+			car1_x += 5;
+			car1_y += 1;
+			if (car1_flag_x == 0)      // move rightward.
+			{
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f + car1_x, 200.0f - car1_y, 0.0f));
+
+				if (-500.0f + car1_x >= 499.9f) // touch the left end(I defined.).
+				{
+					car1_flag_x = 1;
+					car1_x = 0;
+				}
+			}
+			else  // car2_flag_x == 1   // move rigthward.
+			{
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f - car1_x, 200.0f - car1_y, 0.0f));
+
+				if (500.0f - car1_x <= -499.9f)
+				{
+					car1_flag_x = 0;
+					car1_x = 0;
+				}
+			}
+
+			if (200.0f - car1_y <= -199.9f) // touch the floor.
+			{
+				car1_flag = 1;
+				car1_y = 0;
+			}
+		}
+		else // car1_flag == 1    // move upward.
+		{
+			car1_y++;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -200.0f + car1_y, 0.0f));
+
+			if (-200.0f + car1_y >= 200.0f) // touch the ceilling.
+			{
+				car1_flag = 0;
+				car1_y = 0;
+			}
+		}
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car1_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_car();
+		// draw car end here.
+
+		// draw cocktail start here.
+		count_var_cocktail += 1;
+		if (cocktail_flag == 0)
+		{
+			cocktail_x = 300.0f - count_var_cocktail;
+			cocktail_y = 0.0f;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cocktail_x, cocktail_y, 0.0f));
+
+			if (cocktail_x <= -299.9f)
+			{
+				cocktail_flag = 1;
+				count_var_cocktail = 0;
+			}
+		}
+		else // cocktail_flag == 1  
+		{
+			cocktail_x = -300.0f + count_var_cocktail;
+			cocktail_y = 0.0f;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cocktail_x, cocktail_y, 0.0f));
+
+			if (cocktail_x >= 299.9f)
+			{
+				cocktail_flag = 0;
+				count_var_cocktail = 0;
+			}
+		}
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*cocktail_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_cocktail();
+		// draw cocktail  end here.
+
+
+		// draw car2 start here.
+		if (car2_flag == 0) // move downward.
+		{
+			car2_x += 5;
+			car2_y += 1;
+			if (car2_flag_x == 0)      // move leftward.
+			{
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f - car2_x, 200.0f - car2_y, 0.0f));
+
+				if (500.0f - car2_x <= -499.9f) // touch the left end(I defined.).
+				{
+					car2_flag_x = 1;
+					car2_x = 0;
+				}
+			}
+			else  // car2_flag_x == 1   // move rigthward.
+			{
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f + car2_x, 200.0f - car2_y, 0.0f));
+
+				if (-500.0f + car2_x >= 499.9f)
+				{
+					car2_flag_x = 0;
+					car2_x = 0;
+				}
+			}
+
+			if (200.0f - car2_y <= -199.9f) // touch the floor.
+			{
+				car2_flag = 1;
+				car2_y = 0;
+			}
+		}
+		else // car2_flag == 1    // move upward.
+		{
+			car2_y++;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, -200.0f + car2_y, 0.0f));
+
+			if (-200.0f + car2_y >= 200.0f) // touch the ceilling.
+			{
+				car2_flag = 0;
+				car2_y = 0;
+			}
+		}
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+		ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+		ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		draw_car2();
+		// draw car2 end here.
+
 	}
-	else // car2_flag == 1    // move upward.
+	else // all_clock tick completed. draw boomball and scale it.
 	{
-		car2_y++;
-		ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(500.0f, -200.0f + car2_y, 0.0f));
-		
-		if (-200.0f + car2_y >= 200.0f) // touch the ceilling.
+		if (boomball_size < 10)
 		{
-			car2_flag = 0;
-			car2_y = 0;
+			boomball_size += 0.1;
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.0f*boomball_size, 1.0f*boomball_size, 1.0f));
+			ModelMatrix = glm::rotate(ModelMatrix, 2 * TO_RADIAN*boomball_clock, glm::vec3(0.0f, 0.0f, 1.0f));
+			ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+			glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+			draw_boomball();
+		}
+		else
+		{
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.0f*boomball_size, 1.0f*boomball_size, 1.0f));
+			ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+			glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+			if ((int)all_clock % 10 % 2 != 0)
+				draw_boomball();
 		}
 	}
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
-	ModelMatrix = glm::rotate(ModelMatrix, TO_RADIAN*car2_clock, glm::vec3(0.0f, 0.0f, 1.0f));
-	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]); 
-	draw_car2();
-	// draw car2 end here.
-
 	glFlush();	
 }   
 
@@ -1112,6 +1136,7 @@ void cleanup(void) {
 
 void timer(int value)
 {
+	all_clock++;
 	boomball_clock++;
 	airplane_clock++;
 	car1_clock++;
@@ -1149,7 +1174,7 @@ void initialize_OpenGL(void) {
 	glEnable(GL_MULTISAMPLE); 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
-	glClearColor(250 / 255.0f, 128 / 255.0f, 114 / 255.0f, 1.0f);
+	glClearColor(153 / 255.0f, 255 / 255.0f, 153 / 255.0f, 1.0f);
 	ViewMatrix = glm::mat4(1.0f);
 }
 
