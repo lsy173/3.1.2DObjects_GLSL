@@ -24,13 +24,13 @@ int win_width = 0, win_height = 0;
 float centerx = 0.0f, centery = 0.0f, rotate_angle = 0.0f;
 
 // Suyeong added variables start here.
-float airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=0,car2_clock=0;
+float boomball_clock=0, airplane_clock=0, shirt_clock=0,house_clock=0,car1_clock=0,cocktail_clock=0,car2_clock=0;
 // Each object's size variable.
-float airplane_size, shirt_size = 1, house_size = 1, car1_size = 1, cocktail_size = 1, car2_size = 1;
+float boomball_size=1, airplane_size=1, shirt_size = 1, house_size = 1, car1_size = 1, cocktail_size = 1, car2_size = 1;
 // Each object's coordinate change flag.
-int airplane_flag=0, shirt_flag = 0, house_flag = 0, car1_flag = 0, car1_flag_x=0, cocktail_flag = 0, car2_flag = 0, car2_flag_x = 0;;
+int boomball_flag=0,boomball_initialflag=0, boomball_x_flag=0, boomball_y_flag=0, airplane_flag=0, shirt_flag = 0, house_flag = 0, car1_flag = 0, car1_flag_x=0, cocktail_flag = 0, car2_flag = 0, car2_flag_x = 0;;
 // Each object's coordinate informaion variables.
-float airplane_x=0,airplane_y=0,shirt_x=0, shirt_y=0, house_x=0, house_y=0, car1_x=0, car1_y=0, cocktail_x=0, cocktail_y=0, car2_x=0, car2_y=0;
+float boomball_x=0, boomball_y=0, airplane_x=0,airplane_y=0,shirt_x=0, shirt_y=0, house_x=0, house_y=0, car1_x=0, car1_y=0, cocktail_x=0, cocktail_y=0, car2_x=0, car2_y=0;
 //
 // Suyeong added variables end here.
 
@@ -743,6 +743,7 @@ void draw_boomball() {
 //
 
 float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0, count_var_house=0;
+float count_var_boomball = 0;
 
 void display(void) {
 	//int i;
@@ -759,8 +760,77 @@ void display(void) {
 	*/
 
 	// draw boomball start here.
-	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3.0f, 3.0f, 1.0f));
+	count_var_boomball += 5;
+	if (boomball_initialflag == 0)
+	{
+		boomball_x = 0.0f + count_var_boomball;
+		boomball_y = 0.0f;
+		if (boomball_x < 500.0f)
+			ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+		else
+		{
+			boomball_initialflag = 1;
+			count_var_boomball = 0;
+		}
+	}
+	// if boomball_x_flag == 0 : move left // == 1 : move right
+	// if boomball_y_flag == 0 : move up   // == 1 : move down
+	else
+	{
+		if (boomball_x_flag == 0 && boomball_y_flag == 0)
+		{
+			boomball_x = 500.0f - count_var_boomball;
+			boomball_y = 0.0f + count_var_boomball * 3 / 5;
+
+			if (boomball_x > 0.0f && boomball_y < 300.0f)
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+			else
+			{
+				boomball_y_flag = 1;
+				count_var_boomball = 0;
+			}
+		}
+		else if (boomball_x_flag == 0 && boomball_y_flag == 1)
+		{
+			boomball_x = 0.0f - count_var_boomball;
+			boomball_y = 300.0f - count_var_boomball * 3 / 5;
+
+			if (boomball_x > -500.0f && boomball_y > 0.0f)
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+			else
+			{
+				boomball_x_flag = 1;
+				count_var_boomball = 0;
+			}
+		}
+		else if (boomball_x_flag == 1 && boomball_y_flag == 1)
+		{
+			boomball_x = -500.0f + count_var_boomball;
+			boomball_y = 0.0f - count_var_boomball * 3 / 5;
+
+			if (boomball_x < 0.0f && boomball_y > -300.0f)
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+			else
+			{
+				boomball_y_flag = 0;
+				count_var_boomball = 0;
+			}
+		}
+		else if (boomball_x_flag == 1 && boomball_y_flag == 0)
+		{
+			boomball_x = 0.0f + count_var_boomball;
+			boomball_y = -300.0f + count_var_boomball * 3 / 5;
+			if (boomball_x < 500.0f && boomball_y < 0.0f)
+				ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(boomball_x, boomball_y, 0.0f));
+			else
+			{
+				boomball_x_flag = 0;
+				count_var_boomball = 0;
+			}
+		}
+	}
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(5.0f, 5.0f, 1.0f));
+	ModelMatrix = glm::rotate(ModelMatrix, 2*TO_RADIAN*boomball_clock, glm::vec3(0.0f, 0.0f, 1.0f));
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_boomball();
@@ -1042,6 +1112,7 @@ void cleanup(void) {
 
 void timer(int value)
 {
+	boomball_clock++;
 	airplane_clock++;
 	car1_clock++;
 	car2_clock++;
