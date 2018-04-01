@@ -638,6 +638,108 @@ void draw_car2() {
 	glBindVertexArray(0);
 }
 
+// draw boomball
+#define BOOMBALL_UPBODY 0
+#define BOOMBALL_DOWNBODY 1
+#define BOOMBALL_LEFTEYE 2
+#define BOOMBALL_RIGHTEYE 3
+#define BOOMBALL_MOUTH 4
+#define BOOMBALL_EFFECT1 5
+#define BOOMBALL_EFFECT2 6
+#define BOOMBALL_LEFTEYEBROW 7
+#define BOOMBALL_RIGHTEYEBROW 8
+
+
+GLfloat boomball_upbody[8][2] = { { -20.0, 0.0 }, { -15.0, 13.5 }, { -10.0, 17.5 }, { -2.5, 19.5 }, { 2.5, 19.5 }, { 10.0, 17.5}, { 15.0, 13.5}, { 20.0, 0.0 } };
+GLfloat boomball_downbody[8][2] = { { -20.0, 0.0 }, { -15.0, -13.5 }, { -10.0, -17.5 }, { -2.5, -19.5 }, { 2.5, -19.5 }, { 10.0, -17.5}, { 15.0, -13.5 }, { 20.0, 0.0 } };
+GLfloat boomball_lefteye[4][2] = { { -5.3, 5.0 }, { -4.7, 5.0 }, { -5.0, 8.0 }, { -5.0, 2.0 } };
+GLfloat boomball_righteye[4][2] = { { 5.3, 5.0 }, { 4.7, 5.0 }, { 5.0 , 8.0 }, { 5.0, 2.0 } };
+GLfloat boomball_mouth[3][2] = { { -15.0, -3.5 }, { -10.0, -11.5 }, { 15.0, -5.5 } };
+GLfloat boomball_effect1[6][2] = { { 20.0, 20.0 }, { 24.0, 28.0 }, { 21.0, 21.0 }, { 26.0, 21.0 }, { 24.0, 12.0 }, { 23.0, 20.0 } };
+GLfloat boomball_effect2[6][2] = { { -20.0, -20.0 },{ -24.0, -28.0 },{ -21.0, -21.0 },{ -26.0, -21.0 },{ -24.0, -12.0 },{ -23.0, -20.0 } };
+GLfloat boomball_lefteyebrow[4][2] = { { -3.0, 8.0 }, { -2.0, 11.0 }, { -4.0, 10.0 }, { -10.0, 15.0 } };
+GLfloat boomball_righteyebrow[3][2] = { { 3.0, 8.0 }, { 9.0, 15.0 }, { 10.0, 13.0 } };
+
+
+GLfloat boomball_color[9][3] = {
+	{ 255 / 255.0f, 255 / 255.0f, 255 / 255.0f },    // boomball_upbody
+	{ 255 / 255.0f, 0 / 255.0f, 0 / 255.0f },        // boomball_downbody
+	{ 0 / 255.0f, 0 / 255.0f, 0 / 255.0f },          // boomball_lefteye
+	{ 0 / 255.0f, 0 / 255.0f, 0 / 255.0f },          // boomball_righteye
+	{ 255 / 255.0f, 255 / 255.0f, 255 / 255.0f },    // boomball_mouth
+	{ 255 / 255.0f, 255 / 255.0f, 0 / 255.0f },      // boomball_effect1
+	{ 255 / 255.0f, 255 / 255.0f, 0 / 255.0f },      // boomball_effect2
+	{ 0 / 255.0f, 0 / 255.0f, 0 / 255.0f },          // boomball_lefteyebrow
+	{ 0 / 255.0f, 0 / 255.0f, 0 / 255.0f }           // boomball_righteyebrow
+};
+
+GLuint VAO_boomball, VBO_boomball;
+
+void prepare_boomball() {
+	GLsizeiptr buffer_size = sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) +sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1) + sizeof(boomball_effect2) + sizeof(boomball_lefteyebrow) + sizeof(boomball_righteyebrow);
+
+	// Initialize vertex buffer object.
+	glGenBuffers(1, &VBO_boomball);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(boomball_upbody), boomball_upbody);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody), sizeof(boomball_downbody), boomball_downbody);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody), sizeof(boomball_lefteye), boomball_lefteye);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye), sizeof(boomball_righteye), boomball_righteye);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye), sizeof(boomball_mouth), boomball_mouth);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth), sizeof(boomball_effect1), boomball_effect1);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1), sizeof(boomball_effect2), boomball_effect2);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1) + sizeof(boomball_effect2), sizeof(boomball_lefteyebrow), boomball_lefteyebrow);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1) + sizeof(boomball_effect2) + sizeof(boomball_lefteyebrow), sizeof(boomball_righteyebrow), boomball_righteyebrow);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_boomball);
+	glBufferData(GL_ARRAY_BUFFER, buffer_size, NULL, GL_STATIC_DRAW); // allocate buffer object memory
+
+	// Initialize vertex array object.
+	glGenVertexArrays(1, &VAO_boomball);
+	glBindVertexArray(VAO_boomball);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_boomball);
+	glVertexAttribPointer(LOC_VERTEX, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void draw_boomball() {
+	glBindVertexArray(VAO_boomball);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_UPBODY]);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_DOWNBODY]);
+	glDrawArrays(GL_TRIANGLE_FAN, 8, 8);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_LEFTEYE]);
+	glDrawArrays(GL_TRIANGLE_FAN, 16, 4);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_RIGHTEYE]);
+	glDrawArrays(GL_TRIANGLE_FAN, 20, 4);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_MOUTH]);
+	glDrawArrays(GL_TRIANGLE_FAN, 24, 3);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_EFFECT1]);
+	glDrawArrays(GL_TRIANGLE_FAN, 27, 6);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_EFFECT2]);
+	glDrawArrays(GL_TRIANGLE_FAN, 33, 6);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_LEFTEYEBROW]);
+	glDrawArrays(GL_TRIANGLE_FAN, 39, 4);
+
+	glUniform3fv(loc_primitive_color, 1, boomball_color[BOOMBALL_RIGHTEYEBROW]);
+	glDrawArrays(GL_TRIANGLE_FAN, 43, 3);
+
+	glBindVertexArray(0);
+}
+//
+
 float count_var_airplane=0, count_var_shirt=0, count_var_car1=0, count_var_cocktail=0, count_var_car2=0, count_var_house=0;
 
 void display(void) {
@@ -654,6 +756,13 @@ void display(void) {
 	draw_axes();
 	*/
 
+	// draw boomball start here.
+	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
+	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+	draw_boomball();
+	// draw boomball end here.
 
 	// draw airplane start here.
 	count_var_airplane += 3;
@@ -931,7 +1040,7 @@ void cleanup(void) {
 
 void timer(int value)
 {
-	airplane_clock--;
+	airplane_clock++;
 	car1_clock++;
 	car2_clock++;
 	cocktail_clock++;
@@ -974,6 +1083,7 @@ void initialize_OpenGL(void) {
 void prepare_scene(void) {
 	prepare_axes();
 	prepare_line();
+	prepare_boomball();
 	prepare_airplane();
 	prepare_shirt();
 	prepare_house();
@@ -1028,7 +1138,7 @@ void main(int argc, char *argv[]) {
 
 	glutInit (&argc, argv);
  	glutInitDisplayMode(GLUT_RGBA | GLUT_MULTISAMPLE);
-	glutInitWindowSize (1200, 300);
+	glutInitWindowSize (1200, 800);
 	glutInitContextVersion(4, 0);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow(program_name);
