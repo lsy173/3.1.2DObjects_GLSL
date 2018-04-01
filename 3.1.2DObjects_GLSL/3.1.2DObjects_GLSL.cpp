@@ -681,6 +681,10 @@ void prepare_boomball() {
 	// Initialize vertex buffer object.
 	glGenBuffers(1, &VBO_boomball);
 
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_boomball);
+	glBufferData(GL_ARRAY_BUFFER, buffer_size, NULL, GL_STATIC_DRAW); // allocate buffer object memory
+
+
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(boomball_upbody), boomball_upbody);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody), sizeof(boomball_downbody), boomball_downbody);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody), sizeof(boomball_lefteye), boomball_lefteye);
@@ -691,9 +695,7 @@ void prepare_boomball() {
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1) + sizeof(boomball_effect2), sizeof(boomball_lefteyebrow), boomball_lefteyebrow);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(boomball_upbody) + sizeof(boomball_downbody) + sizeof(boomball_lefteye) + sizeof(boomball_righteye) + sizeof(boomball_mouth) + sizeof(boomball_effect1) + sizeof(boomball_effect2) + sizeof(boomball_lefteyebrow), sizeof(boomball_righteyebrow), boomball_righteyebrow);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_boomball);
-	glBufferData(GL_ARRAY_BUFFER, buffer_size, NULL, GL_STATIC_DRAW); // allocate buffer object memory
-
+	
 	// Initialize vertex array object.
 	glGenVertexArrays(1, &VAO_boomball);
 	glBindVertexArray(VAO_boomball);
@@ -758,7 +760,7 @@ void display(void) {
 
 	// draw boomball start here.
 	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(2.0f, 2.0f, 1.0f));
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3.0f, 3.0f, 1.0f));
 	ModelViewProjectionMatrix = ViewProjectionMatrix * ModelMatrix;
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_boomball();
